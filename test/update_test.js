@@ -53,11 +53,11 @@ describe ('update records', () => {
 
   });
 
-  it('A user can have their post count increatment by 1', (done) => {
-    User.update({ name: 'Joe' }, { $inc: { postCount: 1 } })
+  it('A user can have their post likes increatment by 1', (done) => {
+    User.update({ name: 'Joe' }, { $inc: { likes: 100 } })
       .then(() => { User.findOne({ name: 'Joe' })
         .then((user) => {
-          assert(user.postCount === 1);
+          assert(user.likes === 100);
           done();
         });
     });
