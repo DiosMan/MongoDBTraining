@@ -15,8 +15,13 @@ before((done) => {
 
 // Clean up the db before each test
 beforeEach((done) => {
-  mongoose.connection.collections.users.drop( () => {
+  const { users, comments, blogposts }  = mongoose.connection.collections;
+  users.drop( () => {
     // Ready to run the next test
-    done();
+    comments.drop(() => {
+      blogposts.drop(() => {
+        done();
+      });
+    });
   });
 })
