@@ -2,13 +2,17 @@ const assert = require('assert');
 const User = require('../src/user');
 
 describe('Reading users out of the database', () => {
-  let joe;
+  let joe, maria, alex, zach;
 
   // Because the collection was drop at test_helper
   // We need to creat a new collection for this test
   beforeEach((done) => {
     joe = new User({ name: 'Joe'});
-    joe.save()
+    alex = new User({ name: 'Alex'});
+    maria = new User({ name: 'Maria' });
+    zach = new User({ name: 'Zach' });
+
+    Promise.all([alex.save(), joe.save(), maria.save(), zach.save()])
       .then(() => done());
   });
 
@@ -28,4 +32,18 @@ describe('Reading users out of the database', () => {
         done();
       });
   });
-})
+
+  it('can skip and limit the result set', (done) => {
+    User.find({})
+      // sort by accending order
+      .sort({ name: 1 })
+      .skip(1)
+      .limit(2)
+        .then((users) => {
+          assert(users.length === 2);
+          assert(users[0].name === 'Joe');
+          assert(users[1].name === 'Maria');
+          done();
+        })
+  });
+});
